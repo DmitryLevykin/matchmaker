@@ -8,13 +8,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class MatchMaker {
 
-    private final Queue<UserRank> usersQueue = new ConcurrentLinkedQueue();
+    private final Queue<UserRank> usersQueue = new ConcurrentLinkedQueue<>();
 
     private final static int TIME_CRITERION_MS = 5000;
 
-    private int matchSize;
+    private final int matchSize;
 
-    private MatchHandler handler;
+    private final MatchHandler handler;
 
     private long currentTime;
 
@@ -23,11 +23,11 @@ public class MatchMaker {
         this.handler = handler;
     }
 
-    protected long getWaitingTime(UserRank userRank) {
+    private long getWaitingTime(UserRank userRank) {
         return currentTime - userRank.enterTime;
     }
 
-    protected boolean isMatched(UserRank userRank1, UserRank userRank2) {
+    private boolean isMatched(UserRank userRank1, UserRank userRank2) {
         return Math.abs(userRank1.rank - userRank2.rank) * TIME_CRITERION_MS
                 <= getWaitingTime(userRank1) + getWaitingTime(userRank2);
     }

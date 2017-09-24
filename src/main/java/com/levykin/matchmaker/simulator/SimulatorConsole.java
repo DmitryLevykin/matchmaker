@@ -16,7 +16,7 @@ public class SimulatorConsole {
 
     private final static String WELCOME_MESSAGE = "Type user rank (1-30) or type command: 'exit'. Example 5.";
 
-    private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private final static int MATCH_SIZE = 8;
 
@@ -24,7 +24,7 @@ public class SimulatorConsole {
 
     private int usersCounter = 0;
 
-    private MatchMaker matchMaker;
+    private final MatchMaker matchMaker;
 
     private SimulatorConsole() throws IOException {
 

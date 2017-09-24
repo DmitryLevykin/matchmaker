@@ -11,9 +11,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TableView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SimulatorGUIController {
     @FXML
-    public BarChart histogram;
+    public BarChart<String, Number> histogram;
 
     @FXML
     public CategoryAxis xAxis;
@@ -39,7 +42,7 @@ public class SimulatorGUIController {
     @FXML
     TableView<MatchRow> table;
 
-    private XYChart.Data[] chartData = new XYChart.Data[SimulatorGUI.MAX_RATING];
+    private final List<XYChart.Data<String, Number>> chartData = new ArrayList<>(SimulatorGUI.MAX_RATING);
 
     private Runnable resetAction;
 
@@ -55,14 +58,13 @@ public class SimulatorGUIController {
 
     @FXML
     private void initialize() {
-        XYChart.Series series = new XYChart.Series();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
         histogram.getData().add(series);
 
-        for (int i = 0; i < chartData.length; i++) {
-            chartData[i] = new XYChart.Data(String.valueOf(i + 1), 0);
-            series.getData().add(chartData[i]);
-        }
+        for (int i = 0; i < SimulatorGUI.MAX_RATING; i++)
+            chartData.add(new XYChart.Data<>(String.valueOf(i + 1), 0));
 
+        series.getData().addAll(chartData);
         yAxis.setUpperBound(SimulatorGUI.MATCH_SIZE);
     }
 
@@ -71,14 +73,14 @@ public class SimulatorGUIController {
         matchesL.setText("0");
         uptimeL.setText("0");
         waitingL.setText("0");
-        for (XYChart.Data data : chartData)
+        for (XYChart.Data<String, Number> data : chartData)
             data.setYValue(0);
     }
 
     void updateState(String uptime, String waiting, int[] ratingByUsers) {
         uptimeL.setText(uptime);
         waitingL.setText(waiting);
-        for (int i = 0; i < chartData.length; i++)
-            chartData[i].setYValue((double) ratingByUsers[i]);
+        for (int i = 0; i < chartData.size(); i++)
+            chartData.get(i).setYValue((double) ratingByUsers[i]);
     }
 }

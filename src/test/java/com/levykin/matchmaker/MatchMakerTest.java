@@ -5,19 +5,18 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class MatchMakerTest {
 
     /**
-     *  Same rank, same enter time
+     * Same rank, same enter time
      */
     @Test
     public void match1Test() {
         List<List<UserRank>> matches = new ArrayList<>();
         int matchSize = 3;
 
-        MatchMaker maker = new MatchMaker(matchSize, usersRank -> matches.add(usersRank));
+        MatchMaker maker = new MatchMaker(matchSize, matches::add);
 
         UserRank u1 = new UserRank() {{
             user = 1;
@@ -55,14 +54,14 @@ public class MatchMakerTest {
     }
 
     /**
-     *  Different rank, different enter time
+     * Different rank, different enter time
      */
     @Test
     public void match2Test() {
         List<List<UserRank>> matches = new ArrayList<>();
         int matchSize = 3;
 
-        MatchMaker maker = new MatchMaker(matchSize, usersRank -> matches.add(usersRank));
+        MatchMaker maker = new MatchMaker(matchSize, matches::add);
 
         UserRank u1 = new UserRank() {{
             user = 1;
@@ -95,14 +94,14 @@ public class MatchMakerTest {
     }
 
     /**
-     *  Multiple matches
+     * Multiple matches
      */
     @Test
     public void match3Test() {
         List<List<UserRank>> matches = new ArrayList<>();
         int matchSize = 3;
 
-        MatchMaker maker = new MatchMaker(matchSize, usersRank -> matches.add(usersRank));
+        MatchMaker maker = new MatchMaker(matchSize, matches::add);
 
         UserRank u1 = new UserRank() {{
             user = 1;

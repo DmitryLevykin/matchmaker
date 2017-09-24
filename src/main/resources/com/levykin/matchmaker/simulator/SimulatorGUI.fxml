@@ -47,7 +47,7 @@
                         <PropertyValueFactory property="number"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn text="Time" prefWidth="80">
+                <TableColumn text="Time">
                     <cellValueFactory>
                         <PropertyValueFactory property="time"/>
                     </cellValueFactory>
@@ -73,7 +73,6 @@
                     </cellValueFactory>
                 </TableColumn>
             </columns>
-            <items/>
         </TableView>
     </center>
 </BorderPane>

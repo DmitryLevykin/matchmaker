@@ -23,8 +23,8 @@ public class SimulatorGUI extends Application {
     public final static int MATCH_SIZE = 8;
     public final static int MAX_RATING = 30;
 
-    private DateFormat smallDateFormat = new SimpleDateFormat("mm:ss.SSS");
-    private DateFormat bigDateFormat = new SimpleDateFormat("HH:mm:ss");
+    private final DateFormat smallDateFormat = new SimpleDateFormat("mm:ss.SSS");
+    private final DateFormat bigDateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private Thread makerThread;
     private MatchMaker matchMaker;

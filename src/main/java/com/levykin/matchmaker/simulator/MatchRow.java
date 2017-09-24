@@ -1,5 +1,6 @@
 package com.levykin.matchmaker.simulator;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class MatchRow {
     private Integer number;
     private String time;
