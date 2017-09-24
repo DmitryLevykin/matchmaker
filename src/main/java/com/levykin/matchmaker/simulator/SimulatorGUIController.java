@@ -1,5 +1,6 @@
 package com.levykin.matchmaker.simulator;
 
+import com.levykin.matchmaker.MatchMaker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
@@ -42,7 +43,7 @@ public class SimulatorGUIController {
     @FXML
     TableView<MatchRow> table;
 
-    private final List<XYChart.Data<String, Number>> chartData = new ArrayList<>(SimulatorGUI.MAX_RATING);
+    private final List<XYChart.Data<String, Number>> chartData = new ArrayList<>(MatchMaker.MAX_RANK);
 
     private Runnable resetAction;
 
@@ -61,7 +62,7 @@ public class SimulatorGUIController {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         histogram.getData().add(series);
 
-        for (int i = 0; i < SimulatorGUI.MAX_RATING; i++)
+        for (int i = 0; i < MatchMaker.MAX_RANK; i++)
             chartData.add(new XYChart.Data<>(String.valueOf(i + 1), 0));
 
         series.getData().addAll(chartData);

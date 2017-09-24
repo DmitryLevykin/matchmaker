@@ -3,6 +3,10 @@ package com.levykin.matchmaker;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,5 +165,92 @@ public class MatchMakerTest {
         Assert.assertTrue(match2.get(1).rank == match2.get(2).rank);
 
         Assert.assertEquals(1, maker.getQueueSize());
+    }
+
+    @Test
+    public void smallRateTest() throws IOException {
+        Stat stat = getStat("users-queue-1K-5h.txt");
+        Assert.assertTrue(stat.avgRankRange < 19);
+        Assert.assertTrue(stat.avgWaiting < 55300);
+    }
+
+    @Test
+    public void mediumRateTest() throws IOException {
+        Stat stat = getStat("users-queue-10K-5h.txt");
+        Assert.assertTrue(stat.avgRankRange < 6);
+        Assert.assertTrue(stat.avgWaiting < 15200);
+    }
+
+    @Test
+    public void bigRateTest() throws IOException {
+        Stat stat = getStat("users-queue-100K-5h.txt");
+        Assert.assertTrue(stat.avgRankRange < 2);
+        Assert.assertTrue(stat.avgWaiting < 5000);
+    }
+
+    private static class Stat {
+        double avgRankRange;
+        int matches;
+        long avgWaiting;
+    }
+
+    private Stat getStat(String fileName) throws IOException {
+        int matchSize = 8;
+        int[] matchCounter = new int[1];
+        long[] currentTime = new long[1];
+        long[] rankRangeSum = new long[1];
+        List<Long> avgWaiting = new ArrayList<>(10000);
+
+        MatchMaker maker = new MatchMaker(matchSize, usersRank -> {
+            matchCounter[0]++;
+            int minRank = MatchMaker.MAX_RANK;
+            int maxRank = 1;
+
+            long waitingSum = 0;
+            for (UserRank userRank : usersRank) {
+                if (userRank.rank > maxRank)
+                    maxRank = userRank.rank;
+                if (userRank.rank < minRank)
+                    minRank = userRank.rank;
+                waitingSum += currentTime[0] - userRank.enterTime;
+            }
+            avgWaiting.add(waitingSum / matchSize);
+            rankRangeSum[0] += maxRank - minRank;
+        });
+
+        int users = simulateFromFile(maker, fileName, currentTime);
+
+        Stat stat = new Stat();
+        stat.matches = matchCounter[0];
+        stat.avgRankRange = (double) rankRangeSum[0] / matchCounter[0];
+        stat.avgWaiting = avgWaiting.stream().mapToLong(Long::longValue).sum() / matchCounter[0];
+
+        DecimalFormat decimalFormat = new DecimalFormat(".##");
+        System.out.println("Users: " + users);
+        System.out.println("Matches: " + stat.matches);
+        System.out.println("Average users per minute: " + decimalFormat.format(users / 300.0));
+        System.out.println("Average rating range: " + decimalFormat.format(stat.avgRankRange));
+        System.out.println("Average waiting: " + stat.avgWaiting);
+
+        return stat;
+    }
+
+    private int simulateFromFile(MatchMaker maker, String fileName, long[] currentTime) throws IOException {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(MatchMakerTest.class.getResourceAsStream(fileName)))) {
+            int counter = 0;
+            while (reader.ready()) {
+                String row = reader.readLine();
+                String[] split = row.split(":");
+                UserRank userRank = new UserRank();
+                userRank.user = ++counter;
+                userRank.enterTime = Integer.parseInt(split[0]) * 1000;
+                userRank.rank = Integer.parseInt(split[1]);
+                maker.register(userRank);
+                currentTime[0] = userRank.enterTime;
+                maker.make(userRank.enterTime);
+            }
+            return counter;
+        }
     }
 }

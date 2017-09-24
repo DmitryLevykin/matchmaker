@@ -20,22 +20,17 @@ public class SimulatorConsole {
 
     private final static int MATCH_SIZE = 8;
 
-    private final static int MAX_RATING = 30;
-
-    private int usersCounter = 0;
-
-    private final MatchMaker matchMaker;
-
     private SimulatorConsole() throws IOException {
 
         System.out.println("MatchMaker console");
         System.out.println(WELCOME_MESSAGE);
 
-        matchMaker = new MatchMaker(MATCH_SIZE, userRanks -> {
-            List<String> collect = userRanks.stream().map(t -> "user" + t.user).collect(Collectors.toList());
+        MatchMaker matchMaker = new MatchMaker(MATCH_SIZE, usersRank -> {
+            List<String> collect = usersRank.stream().map(t -> "user" + t.user).collect(Collectors.toList());
             System.out.println(dateFormat.format(new Date()) + " " + String.join(", ", collect));
         });
 
+        int usersCounter = 0;
         try (BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in))) {
             while (true) {
                 if (bufferRead.ready()) {
@@ -49,7 +44,7 @@ public class SimulatorConsole {
                         rank = Integer.valueOf(command);
                     } catch (NumberFormatException ignored) {
                     }
-                    if (rank != null && rank > 0 && rank <= MAX_RATING) {
+                    if (rank != null && rank > 0 && rank <= MatchMaker.MAX_RANK) {
                         UserRank userRank = new UserRank();
                         userRank.enterTime = System.currentTimeMillis();
                         userRank.rank = rank;

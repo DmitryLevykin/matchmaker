@@ -12,6 +12,8 @@ public class MatchMaker {
 
     private final static int TIME_CRITERION_MS = 5000;
 
+    public final static int MAX_RANK = 30;
+
     private final int matchSize;
 
     private final MatchHandler handler;
@@ -52,13 +54,13 @@ public class MatchMaker {
         this.currentTime = currentTime;
         List<UserRank> allUsers = new ArrayList<>(usersQueue);
 
+        // Sort by rank
         allUsers.sort(Comparator.comparingInt(o -> o.rank));
 
-        // All matched users for user
+        // All matched users for user with closest rank
         Map<UserRank, List<UserRank>> matchMap = new HashMap<>();
-
         for (int i = 0; i < allUsers.size(); i++) {
-            List<UserRank> userList = new ArrayList<>(matchSize);
+            List<UserRank> userList = new ArrayList<>(allUsers.size());
             UserRank userRankI = allUsers.get(i);
             matchMap.put(userRankI, userList);
             userList.add(userRankI);
@@ -80,7 +82,13 @@ public class MatchMaker {
                 matchMap.remove(userRankI);
         }
 
-        for (List<UserRank> userRanks : matchMap.values()) {
+        // Sort by extreme rank: 1, 30 - first, 15, 16 - last
+        List<UserRank> candidates = new ArrayList<>(matchMap.keySet());
+        candidates.sort(Comparator.comparingLong(o -> -Math.abs(MAX_RANK / 2 - o.rank)));
+
+        for (UserRank candidate : candidates) {
+            List<UserRank> userRanks = matchMap.get(candidate);
+
             if (!isMatched(userRanks))
                 continue;
 

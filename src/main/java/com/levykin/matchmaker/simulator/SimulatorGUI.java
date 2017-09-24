@@ -20,8 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class SimulatorGUI extends Application {
 
-    public final static int MATCH_SIZE = 8;
-    public final static int MAX_RATING = 30;
+    final static int MATCH_SIZE = 8;
 
     private final DateFormat smallDateFormat = new SimpleDateFormat("mm:ss.SSS");
     private final DateFormat bigDateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -73,7 +72,7 @@ public class SimulatorGUI extends Application {
                     Platform.runLater(() -> {
                         long uptime = System.currentTimeMillis() - start - TimeZone.getDefault().getRawOffset();
                         List<UserRank> queueUsers = matchMaker.getQueueUsers();
-                        int[] ratingByUsers = new int[MAX_RATING];
+                        int[] ratingByUsers = new int[MatchMaker.MAX_RANK];
                         for (UserRank userRank : queueUsers)
                             ratingByUsers[userRank.rank - 1]++;
                         controller.updateState(bigDateFormat.format(new Date(uptime)),
@@ -87,12 +86,12 @@ public class SimulatorGUI extends Application {
                         UserRank userRank = new UserRank();
                         userRank.user = usersCounter.incrementAndGet();
                         userRank.enterTime = System.currentTimeMillis();
-                        userRank.rank = ThreadLocalRandom.current().nextInt(1, MAX_RATING + 1);
+                        userRank.rank = ThreadLocalRandom.current().nextInt(1, MatchMaker.MAX_RANK + 1);
                         matchMaker.register(userRank);
                     }
 
                     if (!matchMaker.make())
-                        Thread.sleep(50);
+                        Thread.sleep(1000);
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -105,7 +104,7 @@ public class SimulatorGUI extends Application {
         long currentTime = System.currentTimeMillis();
         usersRank.sort(Comparator.comparingLong(o -> o.enterTime));
         List<String> users = new ArrayList<>(MATCH_SIZE);
-        int minRank = MAX_RATING;
+        int minRank = MatchMaker.MAX_RANK;
         int maxRank = 1;
         long minEnter = currentTime;
         int sumWait = 0;
