@@ -1,0 +1,79 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane fx:controller="com.levykin.matchmaker.simulator.SimulatorGUIController" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <BorderPane>
+            <left>
+                <GridPane hgap="10" vgap="5">
+                    <padding>
+                        <Insets top="5" right="5" bottom="15" left="5"/>
+                    </padding>
+                    <Label text="Users/minute" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Spinner fx:id="spinner" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="true"
+                             prefWidth="80" min="0" max="5000" initialValue="100"/>
+                    <Label text="Uptime" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label fx:id="uptimeL" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Waiting users" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <Label fx:id="waitingL" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Label text="Matches" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <Label fx:id="matchesL" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    <Button fx:id="resetB" text="Reset" onAction="#handleResetAction"
+                            GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2" prefWidth="165"/>
+                </GridPane>
+            </left>
+            <center>
+                <BarChart fx:id="histogram" barGap="0" legendVisible="false" animated="false" maxHeight="150">
+                    <xAxis>
+                        <CategoryAxis fx:id="xAxis" animated="false" autoRanging="false"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="yAxis" animated="false" tickUnit="1" minorTickVisible="false"
+                                    autoRanging="false"/>
+                    </yAxis>
+                </BarChart>
+            </center>
+        </BorderPane>
+    </top>
+    <center>
+        <TableView fx:id="table">
+            <columns>
+                <TableColumn text="#" prefWidth="40">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="number"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Time" prefWidth="80">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="time"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Users" prefWidth="250">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="users"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Rank Range" prefWidth="130">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="range"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Maximum Waiting" prefWidth="130">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="maxWaiting"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Average Waiting" prefWidth="130">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="averageWaiting"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+            <items/>
+        </TableView>
+    </center>
+</BorderPane>
