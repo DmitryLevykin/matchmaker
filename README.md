@@ -14,6 +14,6 @@ $ mvn exec:java@console
 
 ## Start GUI simulator
 ```
-$ mvn exec:java@console
+$ mvn exec:java@gui
 ```
 ![GUI view](/images/gui.png?raw=true)
