@@ -170,15 +170,15 @@ public class MatchMakerTest {
     @Test
     public void smallRateTest() throws IOException {
         Stat stat = getStat("users-queue-1K-5h.txt");
-        Assert.assertTrue(stat.avgRankRange < 19);
-        Assert.assertTrue(stat.avgWaiting < 55300);
+        Assert.assertTrue(stat.avgRankRange < 20);
+        Assert.assertTrue(stat.avgWaiting < 55500);
     }
 
     @Test
     public void mediumRateTest() throws IOException {
         Stat stat = getStat("users-queue-10K-5h.txt");
-        Assert.assertTrue(stat.avgRankRange < 6);
-        Assert.assertTrue(stat.avgWaiting < 15200);
+        Assert.assertTrue(stat.avgRankRange < 7);
+        Assert.assertTrue(stat.avgWaiting < 15500);
     }
 
     @Test
