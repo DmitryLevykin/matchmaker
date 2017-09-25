@@ -2,7 +2,7 @@
 
 ## Build
 ```
-$ mvn clean package
+$ mvn clean install
 ```
 
 ## Start console simulator
